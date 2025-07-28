@@ -1,6 +1,6 @@
 # ComunicaPJE
 
-# 📄 EMATER-MG - Coletor de Processos (via API do PJe)[README.md](https://github.com/user-attachments/files/21467851/README.md)# 📄 EMATER-MG - Coletor de Processos (via API do PJe)
+# 📄 EMATER-MG - Coletor de Processos (via API do PJe)
 
 Este script Python consulta automaticamente a API pública do PJe para buscar processos com parte **EMATER-MG** e extrai os dados principais (número do processo, tribunal, data, advogados, etc.). Em seguida, gera uma planilha `.xlsx` organizada com os resultados, destacando quais advogados (baseado em uma lista de OABs) estão envolvidos.
 
