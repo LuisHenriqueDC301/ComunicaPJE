@@ -5,27 +5,40 @@ from openpyxl.styles import Font, PatternFill
 from tkinter import Tk, filedialog
 import re
 
+# Oculta a janela do Tkinter
 Tk().withdraw()
 
+# Cria uma nova planilha
 wb = Workbook()
 ws = wb.active
 
+# Estilo do cabeçalho
 cabecalho_font = Font(bold=True, color="000000")
 cabecalho_fill = PatternFill(start_color="FFD700", end_color="FFD700", fill_type="solid")
 
+# Cabeçalhos da planilha
 cabecalhos = ["ADVOGADO/OAB", "N.º PROCESSO", "SIGLA TRIBUNAL", "DATA DE DISPONIBILIZAÇÃO"]
 ws.append(cabecalhos)
 
+# Aplica estilo aos cabeçalhos
 for col_num, titulo in enumerate(cabecalhos, start=1):
     cell = ws.cell(row=1, column=col_num)
     cell.font = cabecalho_font
     cell.fill = cabecalho_fill
     ws.column_dimensions[cell.column_letter].width = len(titulo) + 2
 
+# Lista de OABs autorizadas
 lista_oab = [169990, 78115, 164700, 74792, 208355, 177742, 56154, 176082, 107733, 157985, 141697]
-data_inicio = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
 nome_parte = "EMATER-MG"
 
+# Define a data de início com base no dia da semana
+hoje = datetime.now()
+if hoje.weekday() == 0:  # Segunda-feira
+    data_inicio = (hoje - timedelta(days=3)).strftime('%Y-%m-%d')  # Sexta-feira anterior
+else:
+    data_inicio = (hoje - timedelta(days=1)).strftime('%Y-%m-%d')  # Dia anterior
+
+# URL da API
 url = (
     f"https://comunicaapi.pje.jus.br/api/v1/comunicacao?"
     f"nomeParte={nome_parte}&dataDisponibilizacaoInicio={data_inicio}&"
@@ -65,14 +78,13 @@ try:
             ws.append([''] * len(cabecalhos))
 
             print(f"Processo: {numero_processo} | Tribunal: {sigla_tribunal} | Advogados: {', '.join(lista_advogados)}")
-
         else:
             nova_linha = ["Nenhum advogado na lista", numero_processo, sigla_tribunal, data_disponibilizacao]
             ws.append(nova_linha)
             ws.append([''] * len(cabecalhos))
             print(f"Processo: {numero_processo} | Tribunal: {sigla_tribunal} | Nenhum advogado encontrado.")
 
-    # Ajusta largura das colunas com base no conteúdo
+    # Ajusta a largura das colunas com base no conteúdo
     for col in ws.columns:
         max_length = 0
         column = col[0].column_letter
@@ -81,6 +93,7 @@ try:
                 max_length = max(max_length, len(str(cell.value)))
         ws.column_dimensions[column].width = max_length + 2
 
+    # Sugestão de nome e salvamento do arquivo
     nome_sugerido = f"planilha_emater_{data_inicio}.xlsx"
     caminho_arquivo = filedialog.asksaveasfilename(
         defaultextension=".xlsx",
