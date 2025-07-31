@@ -23,7 +23,7 @@ for col_num, titulo in enumerate(cabecalhos, start=1):
     ws.column_dimensions[cell.column_letter].width = len(titulo) + 2
 
 lista_oab = [169990, 78115, 164700, 74792, 208355, 177742, 56154, 176082, 107733, 157985, 141697]
-data_inicio = "2025-06-14" #(datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
+data_inicio = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
 nome_parte = "EMATER-MG"
 
 url = (
